@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +33,9 @@ public class Doctor extends User {
     private double consultationFees;
     private int experience;
     private String daysAvailable;
-    private Time fromTimeAvailable;
-    private Time toTimeAvailable;
+    private LocalTime fromTimeAvailable;
+    private LocalTime toTimeAvailable;
+
+    @OneToMany(mappedBy = "doctor")
+    private List<DoctorAppointment> doctorAppointments;
 }

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,10 +19,17 @@ import java.time.LocalDateTime;
 public class Appointment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long appointmentId;
 
     private String description;
     private LocalDateTime appointmentDate;
+
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PatientAppointment> patientAppointments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY)
+    private List<DoctorAppointment> doctorAppointments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Status status;
