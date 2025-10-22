@@ -11,21 +11,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DoctorAppointment {
+public class Prescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long prescriptionId;
 
-    private String observations;
-    private String diagnosis;
-    private String notes;
+    private String medicineName;
+
+    private String dosage;
+
+    private String duration;
+
+    private String instructions;
 
     @ManyToOne
-    @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
-
-    @ManyToOne
-    @JoinColumn(name = "appointment_id")
+    @JoinColumn(name = "appointment_id", referencedColumnName = "appointmentId")
     private Appointment appointment;
 }

@@ -25,11 +25,25 @@ public class Appointment {
     private String description;
     private LocalDateTime appointmentDate;
 
+    @OneToOne
+    @JoinColumn(name = "primary_doctor_id", referencedColumnName = "id")
+    private Doctor primaryDoctor;
+
     @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PatientAppointment> patientAppointments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DoctorAppointment> doctorAppointments = new ArrayList<>();
+
+    @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
+    private MedicalRecord medicalRecord;
+
+    @OneToMany(
+            mappedBy = "appointment",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<Prescription> prescriptions = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Status status;
