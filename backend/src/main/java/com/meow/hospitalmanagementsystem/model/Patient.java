@@ -1,15 +1,13 @@
 package com.meow.hospitalmanagementsystem.model;
 
 import com.meow.hospitalmanagementsystem.model.enums.BloodGroup;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Patient extends User{
 
-    private Date admissionDate;
+    private LocalDateTime admissionDate;
     private BloodGroup bloodGroup;
     private String emergencyContactName;
     private int emergencyContactNumber;
@@ -28,4 +26,5 @@ public class Patient extends User{
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PatientAppointment> patientAppointments;
+
 }
