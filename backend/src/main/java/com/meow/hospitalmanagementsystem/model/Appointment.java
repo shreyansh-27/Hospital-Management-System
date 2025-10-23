@@ -45,6 +45,9 @@ public class Appointment {
             orphanRemoval = true)
     private List<Prescription> prescriptions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Bill> bills;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
