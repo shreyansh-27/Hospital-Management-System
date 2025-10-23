@@ -1,8 +1,7 @@
 package com.meow.hospitalmanagementsystem.controller;
 
-import com.meow.hospitalmanagementsystem.dto.CreatePatientDTO;
+import com.meow.hospitalmanagementsystem.dto.PatientRequestDTO;
 import com.meow.hospitalmanagementsystem.dto.PatientResponseDTO;
-import com.meow.hospitalmanagementsystem.model.Patient;
 import com.meow.hospitalmanagementsystem.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,17 @@ public class PatientController {
     }
 
     @PostMapping()
-    public ResponseEntity<CreatePatientDTO> addPatient(@RequestBody CreatePatientDTO patientDTO){
+    public ResponseEntity<PatientRequestDTO> addPatient(@RequestBody PatientRequestDTO patientDTO){
         return patientService.addPatient(patientDTO);
+    }
+
+    @PutMapping
+    public ResponseEntity<PatientRequestDTO> updatePatient(@RequestBody PatientRequestDTO patientRequestDTO){
+        return patientService.updatePatient(patientRequestDTO);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deletePatient(@RequestParam Long patientId){
+        return patientService.deletePatient(patientId);
     }
 }

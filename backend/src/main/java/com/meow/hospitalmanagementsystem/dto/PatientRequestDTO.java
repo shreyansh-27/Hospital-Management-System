@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreatePatientDTO {
+public class PatientRequestDTO {
     public String firstName;
     public String middleName;
     public String lastName;
@@ -15,4 +15,8 @@ public class CreatePatientDTO {
     public String phone;
     public String dateOfBirth;
     public String role;
+    public AddressDTO addressDTO;
+    public String emergencyContactName;
+    public String emergencyContactNumber;
+    public String medicalHistory;
 }

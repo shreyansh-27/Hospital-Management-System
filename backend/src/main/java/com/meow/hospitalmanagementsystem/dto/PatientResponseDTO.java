@@ -7,7 +7,8 @@ public record PatientResponseDTO(
         String lname,
         String email,
         String phone,
-        String bloodGroup
+        String bloodGroup,
+        AddressDTO addressDTO
         ) {
 
 }

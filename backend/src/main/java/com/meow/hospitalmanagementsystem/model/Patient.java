@@ -21,7 +21,7 @@ public class Patient extends User{
     private LocalDateTime admissionDate;
     private BloodGroup bloodGroup;
     private String emergencyContactName;
-    private int emergencyContactNumber;
+    private String emergencyContactNumber;
     private String medicalHistory;
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
