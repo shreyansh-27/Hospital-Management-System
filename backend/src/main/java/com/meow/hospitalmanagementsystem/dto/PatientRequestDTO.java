@@ -14,6 +14,7 @@ public class PatientRequestDTO {
     public String email;
     public String phone;
     public String dateOfBirth;
+    public String bloodGroup;
     public String role;
     public AddressDTO addressDTO;
     public String emergencyContactName;
