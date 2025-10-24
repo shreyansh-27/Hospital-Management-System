@@ -27,13 +27,13 @@ public class PatientController {
     }
 
     @PostMapping()
-    public ResponseEntity<PatientRequestDTO> addPatient(@RequestBody PatientRequestDTO patientDTO){
+    public ResponseEntity<PatientResponseDTO> addPatient(@RequestBody PatientRequestDTO patientDTO){
         return patientService.addPatient(patientDTO);
     }
 
     @PutMapping
-    public ResponseEntity<PatientRequestDTO> updatePatient(@RequestBody PatientRequestDTO patientRequestDTO){
-        return patientService.updatePatient(patientRequestDTO);
+    public ResponseEntity<PatientResponseDTO> updatePatient(@RequestBody PatientRequestDTO patientRequestDTO, @RequestParam Long id){
+        return patientService.updatePatient(patientRequestDTO, id);
     }
 
     @DeleteMapping
