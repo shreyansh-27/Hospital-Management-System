@@ -1,13 +1,12 @@
 package com.meow.hospitalmanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meow.hospitalmanagementsystem.model.enums.Role;
 import com.meow.hospitalmanagementsystem.model.enums.Status;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import lombok.*;
 
 @Entity
 @Getter
@@ -16,49 +15,55 @@ import java.util.Date;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
-    @Column(nullable = false)
-    private String firstName;
+  @Column(nullable = false)
+  private String firstName;
 
-    @Column(nullable = true)
-    private String middleName;
+  @Column(nullable = true)
+  private String middleName;
 
-    @Column(nullable = false)
-    private String lastName;
+  @Column(nullable = false)
+  private String lastName;
 
-    @Column(unique = true, nullable = false)
-    private String phoneNumber;
+  @Column(unique = true)
+  private String username;
 
-    @Column(unique = true)
-    private String email;
-    
-    private LocalDate dateOfBirth;
-    private String password;
+  @Column(unique = true, nullable = false)
+  private String phoneNumber;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
-    private Address address;
+  @Column(unique = true)
+  private String email;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+  private LocalDate dateOfBirth;
+  private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
+  private String imageName;
+  private String imageType;
+  @JsonIgnore private byte[] imageBytes;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "address_id")
+  private Address address;
 
+  @Enumerated(EnumType.STRING)
+  private Role role = Role.doctor;
 
-    @PrePersist
-    public void onCreate(){
-        createdAt = LocalDateTime.now();
-    }
+  @Enumerated(EnumType.STRING)
+  private Status status;
 
-    @PreUpdate
-    public void onUpdate(){
-        updatedAt = LocalDateTime.now();
-    }
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
+
+  @PrePersist
+  public void onCreate() {
+    createdAt = LocalDateTime.now();
+  }
+
+  @PreUpdate
+  public void onUpdate() {
+    updatedAt = LocalDateTime.now();
+  }
 }

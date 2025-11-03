@@ -1,17 +1,15 @@
 package com.meow.hospitalmanagementsystem.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-public class AppException extends RuntimeException{
+@Getter
+public class AppException extends RuntimeException {
 
-    private final HttpStatus httpStatus;
+  private final HttpStatus httpStatus;
 
-    public AppException(String message, HttpStatus status){
-        super(message);
-        httpStatus = status;
-    }
-
-    public HttpStatus getHttpStatus(){
-        return httpStatus;
-    }
+  public AppException(String message, HttpStatus status) {
+    super(message);
+    httpStatus = status;
+  }
 }

@@ -8,18 +8,21 @@ import com.meow.hospitalmanagementsystem.mapper.PatientMapper;
 import com.meow.hospitalmanagementsystem.model.Patient;
 import com.meow.hospitalmanagementsystem.model.enums.Status;
 import com.meow.hospitalmanagementsystem.repo.PatientRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class PatientServiceImpl implements PatientService{
 
     private final PatientRepo patientRepo;
-    
+
     PatientServiceImpl(PatientRepo patientRepo){
         this.patientRepo = patientRepo;
     }
@@ -41,7 +44,7 @@ public class PatientServiceImpl implements PatientService{
 
     @Override
     public ResponseEntity<PatientResponseDTO> getPatientById(Long patientId) {
-        Patient patient = patientRepo.findById(patientId)
+        Patient patient = (Patient) patientRepo.findByIdAndStatus(patientId, Status.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient", patientId));
 
        return new ResponseEntity<>(PatientMapper.toPatientResponse(patient), HttpStatus.OK);
@@ -90,6 +93,42 @@ public class PatientServiceImpl implements PatientService{
             patient.setStatus(Status.INACTIVE);
             patientRepo.save(patient);
             return ResponseEntity.ok("Patient Deleted Successfully");
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getImageByPatientId(Long patientId) {
+
+        Patient patient = patientRepo.findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient", patientId));
+
+        byte[] imageBytes = patient.getImageBytes();
+
+        if(imageBytes == null || imageBytes.length == 0){
+            throw new ResourceNotFoundException("Image not found for patient", patientId);
+        }
+
+        MediaType imageType = MediaType.valueOf(patient.getImageType());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "max-age=3600") //allow browser to cache image for an hour
+                .contentType(imageType)
+                .body(patient.getImageBytes());
+    }
+
+    @Override
+    public ResponseEntity<String> addOrUploadImage(MultipartFile file, Long patientId) throws IOException {
+
+        Patient patient = patientRepo.findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient", patientId));
+
+        if(file.isEmpty()) throw new IllegalArgumentException("uploaded file is empty");
+
+        patient.setImageName(file.getOriginalFilename());
+        patient.setImageType(file.getContentType());
+        patient.setImageBytes(file.getBytes());
+
+        patientRepo.save(patient);
+        return new ResponseEntity<>("Image successfully uploaded" ,HttpStatus.CREATED);
     }
 
 }
