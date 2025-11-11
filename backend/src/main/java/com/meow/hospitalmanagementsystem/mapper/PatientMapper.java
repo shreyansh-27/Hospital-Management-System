@@ -6,7 +6,7 @@ import com.meow.hospitalmanagementsystem.model.Patient;
 import com.meow.hospitalmanagementsystem.model.enums.BloodGroup;
 
 public class PatientMapper {
-    public static Patient toPatient(PatientRequestDTO patientDTO){
+    public static Patient toPatient(PatientRequestDTO patientDTO) {
 
         Patient patient = new Patient();
 
@@ -16,14 +16,14 @@ public class PatientMapper {
         patient.setEmail(patientDTO.getEmail());
         patient.setPhoneNumber(patientDTO.getPhone());
         patient.setBloodGroup(BloodGroup.valueOf(patientDTO.getBloodGroup()));
-        patient.setAddress(AddressMapper.toAddress(patientDTO));
+        patient.setAddress(AddressMapper.toAddress(patientDTO.getAddressDTO()));
         patient.setEmergencyContactName(patientDTO.getEmergencyContactName());
         patient.setEmergencyContactNumber(patientDTO.getEmergencyContactNumber());
         patient.setMedicalHistory(patientDTO.getMedicalHistory());
         return patient;
     }
 
-    public static PatientResponseDTO toPatientResponse(Patient patient){
+    public static PatientResponseDTO toPatientResponse(Patient patient) {
         return new PatientResponseDTO(
                 patient.getId(),
                 patient.getFirstName(),
@@ -32,11 +32,8 @@ public class PatientMapper {
                 patient.getEmail(),
                 patient.getPhoneNumber(),
                 patient.getBloodGroup().toString(),
-                AddressMapper.toAddressDTO(patient.getAddress())
+                AddressMapper.toAddressResponseDTO(patient.getAddress())
         );
     }
 
-    public static void updatedPatient(Patient patient, PatientRequestDTO patientRequestDTO){
-
-    }
 }

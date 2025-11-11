@@ -19,11 +19,11 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class PatientServiceImpl implements PatientService{
+public class PatientServiceImpl implements PatientService {
 
     private final PatientRepo patientRepo;
 
-    PatientServiceImpl(PatientRepo patientRepo){
+    PatientServiceImpl(PatientRepo patientRepo) {
         this.patientRepo = patientRepo;
     }
 
@@ -35,7 +35,7 @@ public class PatientServiceImpl implements PatientService{
                 .map(PatientMapper::toPatientResponse)
                 .toList();
 
-        if(patientResponseDTOS.isEmpty()){
+        if (patientResponseDTOS.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
@@ -47,7 +47,7 @@ public class PatientServiceImpl implements PatientService{
         Patient patient = (Patient) patientRepo.findByIdAndStatus(patientId, Status.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient", patientId));
 
-       return new ResponseEntity<>(PatientMapper.toPatientResponse(patient), HttpStatus.OK);
+        return new ResponseEntity<>(PatientMapper.toPatientResponse(patient), HttpStatus.OK);
     }
 
     @Override
@@ -56,9 +56,9 @@ public class PatientServiceImpl implements PatientService{
 
         boolean exists =
                 patientRepo.findPatientByPhoneNumber(patient.getPhoneNumber()).isPresent() ||
-                patientRepo.findPatientByEmail(patient.getEmail()).isPresent();
+                        patientRepo.findPatientByEmail(patient.getEmail()).isPresent();
 
-        if(exists){
+        if (exists) {
             throw new InvalidRequestException("Patient already exists");
         }
         System.out.println(patient);
@@ -75,7 +75,7 @@ public class PatientServiceImpl implements PatientService{
         Patient patient = (Patient) patientRepo.findByIdAndStatus(id, Status.ACTIVE).
                 orElseThrow(() -> new ResourceNotFoundException("Patient", id));
 
-        PatientMapper.updatedPatient(patient, patientRequestDTO);
+        patient = PatientMapper.toPatient(patientRequestDTO);
 
         Patient updatedPatient = patientRepo.save(patient);
         return ResponseEntity.ok(PatientMapper.toPatientResponse(updatedPatient));
@@ -83,16 +83,16 @@ public class PatientServiceImpl implements PatientService{
 
     @Override
     public ResponseEntity<String> deletePatient(Long patientId) {
-            Patient patient = patientRepo
-                            .findById(patientId)
-                            .orElseThrow(() -> new ResourceNotFoundException("Patient", patientId));
-            if(patient.getStatus() == Status.INACTIVE){
-                throw new InvalidRequestException("Patient is already inactive");
-            }
+        Patient patient = patientRepo
+                .findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient", patientId));
+        if (patient.getStatus() == Status.INACTIVE) {
+            throw new InvalidRequestException("Patient is already inactive");
+        }
 
-            patient.setStatus(Status.INACTIVE);
-            patientRepo.save(patient);
-            return ResponseEntity.ok("Patient Deleted Successfully");
+        patient.setStatus(Status.INACTIVE);
+        patientRepo.save(patient);
+        return ResponseEntity.ok("Patient Deleted Successfully");
     }
 
     @Override
@@ -103,7 +103,7 @@ public class PatientServiceImpl implements PatientService{
 
         byte[] imageBytes = patient.getImageBytes();
 
-        if(imageBytes == null || imageBytes.length == 0){
+        if (imageBytes == null || imageBytes.length == 0) {
             throw new ResourceNotFoundException("Image not found for patient", patientId);
         }
 
@@ -121,14 +121,14 @@ public class PatientServiceImpl implements PatientService{
         Patient patient = patientRepo.findById(patientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient", patientId));
 
-        if(file.isEmpty()) throw new IllegalArgumentException("uploaded file is empty");
+        if (file.isEmpty()) throw new IllegalArgumentException("uploaded file is empty");
 
         patient.setImageName(file.getOriginalFilename());
         patient.setImageType(file.getContentType());
         patient.setImageBytes(file.getBytes());
 
         patientRepo.save(patient);
-        return new ResponseEntity<>("Image successfully uploaded" ,HttpStatus.CREATED);
+        return new ResponseEntity<>("Image successfully uploaded", HttpStatus.CREATED);
     }
 
 }

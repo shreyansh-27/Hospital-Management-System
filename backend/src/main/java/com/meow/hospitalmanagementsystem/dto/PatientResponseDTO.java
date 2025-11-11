@@ -1,7 +1,5 @@
 package com.meow.hospitalmanagementsystem.dto;
 
-import lombok.Data;
-
 public record PatientResponseDTO(
         Long id,
         String fname,
@@ -10,7 +8,7 @@ public record PatientResponseDTO(
         String email,
         String phone,
         String bloodGroup,
-        AddressDTO addressDTO
-        ) {
+        AddressResponseDTO addressDTO
+) {
 
 }
